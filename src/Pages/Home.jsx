@@ -1,9 +1,12 @@
 import React from 'react';
+import Stats from '../Component/Stats';
+import ImageSlider from '../Component/ImageSlider';
 
 const Home = () => {
     return (
         <div>
-            <h1>home</h1>
+            <ImageSlider/>
+            <Stats/>
         </div>
     );
 };
