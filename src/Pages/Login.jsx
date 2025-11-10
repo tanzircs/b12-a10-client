@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Link } from 'react-router';
+import { AuthContext } from '../Context/AuthContext';
 
 const Login = () => {
+
+    const { googleLogin } = use(AuthContext); 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +26,9 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    console.log("Google Login Clicked");
+      googleLogin().then(() => {
+          //toast
+      }) 
   };
 
     return (

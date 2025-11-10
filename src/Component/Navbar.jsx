@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { use,  useState } from "react";
 import { NavLink } from "react-router";
 import logo from "../assets/logo.jpg";
+import { AuthContext } from "../Context/AuthContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
-  const activeClass = "border-b-2 border-black pb-1";
+    const activeClass = "border-b-2 border-black pb-1";
+    
+     const { user } = use(AuthContext); 
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -48,7 +51,8 @@ const Navbar = () => {
           </NavLink>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+              {
+                  user? user?.displayName: <div className="hidden md:flex items-center gap-4">
           <NavLink to="/login" className="px-3 py-1 border rounded">
             Login
           </NavLink>
@@ -59,6 +63,7 @@ const Navbar = () => {
             Register
           </NavLink>
         </div>
+        }
 
         <button className="md:hidden" onClick={() => setOpen(!open)}>
           <span className="text-2xl">☰</span>

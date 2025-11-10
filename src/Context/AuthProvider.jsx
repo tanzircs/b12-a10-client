@@ -1,0 +1,80 @@
+import React, { useEffect, useState } from "react";
+
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../Firebase/firebase";
+import { AuthContext } from "./AuthContext";
+
+
+const googleProvider = new GoogleAuthProvider();
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const googleLogin = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
+  const logOut = () => {
+    return signOut(auth);
+  };
+
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  const loginUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const updateUser = (curentUser) => {
+    return updateProfile(auth.currentUser, {
+      displayName: curentUser.displayName,
+      photoURL: curentUser.photoURL,
+    });
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        localStorage.setItem("access-token", token);
+        setUser(currentUser);
+      } else {
+        localStorage.removeItem("access-token");
+        setUser(null);
+      }
+
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+    console.log(user);
+    
+  const authInfo = {
+    googleLogin,
+    user,
+    logOut,
+    setUser,
+    updateUser,
+    createUser,
+    loginUser,
+    loading,
+    setLoading,
+  };
+  return <AuthContext value={authInfo}>{children}</AuthContext>;
+};
+
+export default AuthProvider;
