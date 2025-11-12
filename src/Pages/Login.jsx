@@ -1,107 +1,139 @@
-import React, { use, useState } from 'react';
-import { Link } from 'react-router';
-import { AuthContext } from '../Context/AuthContext';
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Helmet } from "react-helmet-async";
+import { toast } from "react-toastify";
+import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { AuthContext } from "../Context/AuthContext";
 
 const Login = () => {
-
-    const { googleLogin } = use(AuthContext); 
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { loginUser, googleLogin } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (e) => {
+  const from = location.state?.from?.pathname || "/";
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address.");
-      return;
+    setLoading(true);
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      await loginUser(email, password);
+      toast.success("Login Successful!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to login");
+      setLoading(false);
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return;
-    }
-    setError("");
-    console.log({ email, password });
   };
 
-  const handleGoogleLogin = () => {
-      googleLogin().then(() => {
-          //toast
-      }) 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      await googleLogin();
+      toast.success("Google Login Successful!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Google login failed");
+      setLoading(false);
+    }
   };
 
-    return (
-      <div className="max-w-md mx-auto mt-20 px-4">
-        <h1 className="text-2xl font-semibold mb-6 text-center">
-          Join EcoTrack
-        </h1>
-
-        {error && (
-          <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              required
-            />
+  return (
+    <>
+      <Helmet>
+        <title>Login to EcoTrack</title>
+      </Helmet>
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content flex-col w-full max-w-md">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">Login to EcoTrack</h1>
           </div>
+          <div className="card w-full shadow-2xl bg-base-100">
+            <form onSubmit={handleLogin} className="card-body">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="email"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control relative">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="password"
+                  className="input input-bordered"
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-14 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                <label className="label">
+                  <Link
+                    to="/forgot-password"
+                    className="label-text-alt link link-hover"
+                  >
+                    Forgot password?
+                  </Link>
+                </label>
+              </div>
+              <div className="form-control mt-6">
+                <button
+                  type="submit"
+                  className="btn btn-success text-white w-full"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    "Login"
+                  )}
+                </button>
+              </div>
+            </form>
 
-          <div>
-            <label className="block mb-1 text-sm">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded pr-10"
-                required
-              />
+            <div className="divider px-8">OR</div>
+
+            <div className="card-body pt-0">
               <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-600"
+                onClick={handleGoogleLogin}
+                className="btn btn-outline"
+                disabled={loading}
               >
-                {showPassword ? "Hide" : "Show"}
+                <FaGoogle className="text-red-500" />
+                Login with Google
               </button>
             </div>
+
+            <p className="text-center pb-6">
+              New to EcoTrack?{" "}
+              <Link to="/register" className="link link-success font-semibold">
+                Register
+              </Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded hover:opacity-90 transition"
-          >
-            Login
-          </button>
-        </form>
-
-        <div className="mt-2 text-right text-sm">
-          <Link to="/forgot-password" className="text-blue-600 hover:underline">
-            Forgot Password?
-          </Link>
         </div>
-
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full mt-4 border py-2 rounded flex justify-center hover:bg-gray-50 transition"
-        >
-          Continue with Google
-        </button>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <Link to="/register" className="underline">
-            Register
-          </Link>
-        </p>
       </div>
-    );
+    </>
+  );
 };
 
 export default Login;

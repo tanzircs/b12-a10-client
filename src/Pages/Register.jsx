@@ -1,137 +1,191 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Helmet } from "react-helmet-async";
 
-
+import { toast } from "react-toastify";
+import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { AuthContext } from "../Context/AuthContext";
 
 const Register = () => {
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const { createUser, updateUserProfile, googleLogin } =
+    useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const validatePassword = (value) => {
-    if (value.length < 6) return "Password must be at least 6 characters.";
-    if (!/[a-z]/.test(value)) return "Must include a lowercase letter.";
-    if (!/[A-Z]/.test(value)) return "Must include an uppercase letter.";
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
-      return "Must include a special character.";
+  const from = location.state?.from?.pathname || "/";
+
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    if (!/[A-Z]/.test(password)) {
+      return "Password must contain at least one uppercase letter.";
+    }
+    if (!/[a-z]/.test(password)) {
+      return "Password must contain at least one lowercase letter.";
+    }
+    if (!/[!@#$%^&*()_+]/.test(password)) {
+      return "Password must contain at least one special character.";
+    }
     return "";
   };
 
-  const handleSubmit = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const msg = validatePassword(password);
-    if (msg) {
-      setError(msg);
+    setLoading(true);
+    setPasswordError("");
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const photo = form.photo.value;
+    const password = form.password.value;
+
+    const validationError = validatePassword(password);
+    if (validationError) {
+      setPasswordError(validationError);
+      setLoading(false);
       return;
     }
 
-    setError("");
-    setLoading(true);
+    try {
+      await createUser(email, password);
+      await updateUserProfile(name, photo);
 
-
-    setTimeout(() => {
+      toast.success("Registration Successful!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to register");
       setLoading(false);
-      navigate("/", { replace: true });
-    }, 1000);
+    }
   };
 
-  const handleGoogleRegister = () => {
-    console.log("Google Register Clicked");
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      await googleLogin();
+      toast.success("Google Login Successful!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Google login failed");
+      setLoading(false);
+    }
   };
-    
-    return (
-      <div className="max-w-md mx-auto mt-16 px-4">
-        <h1 className="text-2xl font-semibold mb-6 text-center">
-          Join EcoTrack
-        </h1>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              required
-            />
+  return (
+    <>
+      <Helmet>
+        <title>Join EcoTrack</title>
+      </Helmet>
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content flex-col w-full max-w-md">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">Join EcoTrack</h1>
           </div>
+          <div className="card w-full shadow-2xl bg-base-100">
+            <form onSubmit={handleRegister} className="card-body">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Name</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your Name"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="email"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo URL</span>
+                </label>
+                <input
+                  type="url"
+                  name="photo"
+                  placeholder="Photo URL"
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control relative">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="password"
+                  className="input input-bordered"
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-14 cursor-pointer"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
 
-          <div>
-            <label className="block mb-1 text-sm">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              required
-            />
-          </div>
+              {passwordError && (
+                <div className="text-red-500 text-sm mt-2">{passwordError}</div>
+              )}
 
-          <div>
-            <label className="block mb-1 text-sm">Photo URL</label>
-            <input
-              type="text"
-              value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
+              <div className="form-control mt-6">
+                <button
+                  type="submit"
+                  className="btn btn-success text-white w-full"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    "Register"
+                  )}
+                </button>
+              </div>
+            </form>
 
-          <div>
-            <label className="block mb-1 text-sm">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded pr-10"
-                required
-              />
+            <div className="divider px-8">OR</div>
+
+            <div className="card-body pt-0">
               <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-600"
+                onClick={handleGoogleLogin}
+                className="btn btn-outline"
+                disabled={loading}
               >
-                {showPassword ? "Hide" : "Show"}
+                <FaGoogle className="text-red-500" />
+                Register with Google
               </button>
             </div>
+
+            <p className="text-center pb-6">
+              Already have an account?{" "}
+              <Link to="/login" className="link link-success font-semibold">
+                Login
+              </Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black text-white py-2 rounded hover:opacity-90 transition disabled:opacity-50"
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-
-        <button
-          onClick={handleGoogleRegister}
-          className="w-full mt-4 border py-2 rounded flex justify-center hover:bg-gray-50 transition"
-        >
-          Continue with Google
-        </button>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="underline">
-            Login
-          </Link>
-        </p>
+        </div>
       </div>
-    );
+    </>
+  );
 };
 
 export default Register;
