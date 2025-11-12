@@ -5,45 +5,49 @@ import ErrorPage from "../Pages/ErrorPage";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import Forget from "../Pages/Forget";
+import PrivateRoute from "./PrivateRoute";
+import MyProfile from "../Pages/MyProfile";
+import AllChallenges from "./../Pages/AllChallenges";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PublicLayout></PublicLayout>,
+    element: <PublicLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
         element: <Home />,
       },
-      //   {
-      //     path: "/detailes/:id",
-      //     element: (
-      //       <PrivateRoute>
-      //         <SkillDetailes />
-      //       </PrivateRoute>
-      //     ),
-      //   },
-      //   {
-      //     path: "/my-profile",
-      //     element: (
-      //       <PrivateRoute>
-      //         <MyProfile />
-      //       </PrivateRoute>
-      //     ),
-      //   },
       {
         path: "/login",
-        Component: Login,
+        element: <Login />,
       },
       {
         path: "/register",
-        Component: Register,
+        element: <Register />,
       },
-        {
-          path: "/forgot-password",
-          element: <Forget/>,
-        },
+      {
+        path: "/forgot-password",
+        element: <Forget />,
+      },
+      {
+        path: "/challenges",
+        element: <AllChallenges />,
+      },
+
+
+
+      {
+        path: "/my-profile",
+        element: (
+          <PrivateRoute>
+            <MyProfile />
+          </PrivateRoute>
+        ),
+      },
+
       {
         path: "*",
         element: <ErrorPage />,
