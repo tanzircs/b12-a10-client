@@ -1,92 +1,120 @@
-import React, { use,  useState } from "react";
-import { NavLink } from "react-router";
-import logo from "../assets/logo.jpg";
+import React, { useContext } from "react";
+import { Link, NavLink } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import logo from "../assets/logo.jpg";
+import { FaBars } from "react-icons/fa";
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
+  const { user, logOut } = useContext(AuthContext);
 
-    const activeClass = "border-b-2 border-black pb-1";
-    
-     const { user } = use(AuthContext); 
+  const handleLogout = () => {
+    logOut().catch((err) => console.error(err));
+  };
+
+  const navLinks = (
+    <>
+      <li>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/challenges">Challenges</NavLink>
+      </li>
+      {user && (
+        <li>
+          <NavLink to={"/my-activities"}>My Activities</NavLink>
+        </li>
+      )}
+    </>
+  );
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-[1440px] mx-auto px-4 flex items-center justify-between h-16">
-        <NavLink to="/" className="flex items-center gap-2">
-          <img src={logo} alt="EcoTrack Logo" className="h-8 w-8" />
-          <span className="font-semibold text-xl">EcoTrack</span>
-        </NavLink>
-
-        <div className="hidden md:flex items-center gap-6">
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? activeClass : "")}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/challenges"
-            className={({ isActive }) => (isActive ? activeClass : "")}
-          >
-            Challenges
-          </NavLink>
-          <NavLink
-            to="/activities"
-            className={({ isActive }) => (isActive ? activeClass : "")}
-          >
-            My Activities
-          </NavLink>
-          <NavLink
-            to="/tips"
-            className={({ isActive }) => (isActive ? activeClass : "")}
-          >
-            Tips
-          </NavLink>
-          <NavLink
-            to="/events"
-            className={({ isActive }) => (isActive ? activeClass : "")}
-          >
-            Events
-          </NavLink>
+    <nav className="bg-base-100 shadow-sm sticky top-0 z-50">
+      <div className="navbar max-w-7xl mx-auto">
+        <div className="navbar-start">
+          <div className="dropdown">
+            <label tabIndex={0} className="btn btn-ghost lg:hidden">
+              <FaBars className="h-5 w-5" />
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              {navLinks}
+              {!user && (
+                <>
+                  <li className="mt-2">
+                    <Link
+                      to="/login"
+                      className="btn btn-outline btn-success w-full"
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li className="mt-2">
+                    <Link to="/register" className="btn btn-success w-full">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+          <Link to="/" className="btn btn-ghost text-xl gap-2">
+            <img src={logo} alt="EcoTrack Logo" className="h-8 w-8" />
+            <span className="font-semibold">EcoTrack</span>
+          </Link>
         </div>
 
-              {
-                  user? user?.displayName: <div className="hidden md:flex items-center gap-4">
-          <NavLink to="/login" className="px-3 py-1 border rounded">
-            Login
-          </NavLink>
-          <NavLink
-            to="/register"
-            className="px-3 py-1 bg-black text-white rounded"
-          >
-            Register
-          </NavLink>
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1 gap-1">{navLinks}</ul>
         </div>
-        }
 
-        <button className="md:hidden" onClick={() => setOpen(!open)}>
-          <span className="text-2xl">☰</span>
-        </button>
+        <div className="navbar-end">
+          {user ? (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                <div className="w-10 rounded-full">
+                  <img
+                    alt="User Avatar"
+                    src={
+                      user.photoURL ||
+                      "https://api.lorem.space/image/face?hash=33791"
+                    }
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li className="px-4 py-2 font-medium">
+                  {user.displayName || "User"}
+                </li>
+                <li>
+                  <Link to="/my-profile">My Profile</Link>
+                </li>
+                <li>
+                  <Link to="/my-activities">My Activities</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-red-500">
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center gap-2">
+              <Link to="/login" className="btn btn-outline btn-success">
+                Login
+              </Link>
+              <Link to="/register" className="btn btn-success">
+                Register
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-
-      {open && (
-        <div className="md:hidden px-4 pb-4 space-y-3">
-          <NavLink to="/">Home</NavLink>
-          <br />
-          <NavLink to="/challenges">Challenges</NavLink>
-          <br />
-          <NavLink to="/activities">My Activities</NavLink>
-          <br />
-          <NavLink to="/tips">Tips</NavLink>
-          <br />
-          <NavLink to="/events">Events</NavLink>
-          <hr />
-          <NavLink to="/login">Login</NavLink>
-          <br />
-          <NavLink to="/register">Register</NavLink>
-        </div>
-      )}
     </nav>
   );
 };

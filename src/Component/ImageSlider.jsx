@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Link } from "react-router"; //
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -9,7 +10,6 @@ import "swiper/css/pagination";
 import slide1 from "../assets/slide1.jpg";
 import slide2 from "../assets/slide2.jpg";
 import slide3 from "../assets/slide3.jpg";
-
 
 const slides = [
   {
@@ -24,7 +24,7 @@ const slides = [
     title: "Track Your Impact",
     description: "Measure how your actions contribute to sustainability.",
     buttonText: "View Dashboard",
-    buttonLink: "/dashboard",
+    buttonLink: "/my-activities",
   },
   {
     image: slide3,
@@ -34,7 +34,6 @@ const slides = [
     buttonLink: "/register",
   },
 ];
-
 
 const ImageSlider = () => {
   const prevRef = useRef(null);
@@ -71,21 +70,23 @@ const ImageSlider = () => {
           <SwiperSlide key={i}>
             <div
               className="w-full h-full bg-cover bg-center flex flex-col items-start justify-center text-white px-10"
-              style={{ backgroundImage: `url(${slide.image})` }}
+              style={{
+                backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${slide.image})`,
+              }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold drop-shadow-lg">
+              <h2 className="text-3xl md:text-5xl font-bold drop-shadow-lg max-w-2xl">
                 {slide.title}
               </h2>
               <p className="max-w-xl mt-3 text-lg md:text-xl drop-shadow-md">
                 {slide.description}
               </p>
 
-              <a
-                href={slide.buttonLink}
-                className="mt-6 inline-block bg-black text-white px-6 py-3 rounded-md hover:opacity-90 transition"
+              <Link
+                to={slide.buttonLink}
+                className="mt-6 inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition"
               >
                 {slide.buttonText}
-              </a>
+              </Link>
             </div>
           </SwiperSlide>
         ))}
