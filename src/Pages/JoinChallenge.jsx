@@ -20,7 +20,7 @@ const JoinChallenge = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:3000/api/challenges/${id}`
+          `https://b12-a10-server.vercel.app/api/challenges/${id}`
         );
         setChallenge(response.data.data);
       } catch (err) {
@@ -36,11 +36,14 @@ const JoinChallenge = () => {
   const handleJoinChallenge = async () => {
     setIsJoining(true);
     try {
-      await axios.post(`http://localhost:3000/api/challenges/join/${id}`, {
-        userId: user.uid,
-        email: user.email,
-        joinDate: new Date().toISOString(),
-      });
+      await axios.post(
+        `https://b12-a10-server.vercel.app/api/challenges/join/${id}`,
+        {
+          userId: user.uid,
+          email: user.email,
+          joinDate: new Date().toISOString(),
+        }
+      );
 
       toast.success("Successfully joined the challenge!");
       navigate("/my-activities");

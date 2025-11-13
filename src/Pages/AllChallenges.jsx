@@ -29,9 +29,12 @@ const AllChallenges = () => {
   const fetchChallenges = async (queryParams = {}) => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/challenges", {
-        params: queryParams,
-      });
+      const response = await axios.get(
+        "https://b12-a10-server.vercel.app/api/challenges",
+        {
+          params: queryParams,
+        }
+      );
       setChallenges(response.data.data);
     } catch (error) {
       console.error("Failed to fetch challenges:", error);

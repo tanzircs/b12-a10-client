@@ -11,7 +11,7 @@ const ActiveChallenges = () => {
     const fetchChallenges = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/challenges?limit=6"
+          "https://b12-a10-server.vercel.app/api/challenges?limit=6"
         );
         setChallenges(response.data.data);
       } catch (error) {

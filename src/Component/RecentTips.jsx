@@ -10,7 +10,7 @@ const RecentTips = () => {
     const fetchTips = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/tips?limit=5&sort=createdAt"
+          "https://b12-a10-server.vercel.app/api/tips?limit=5&sort=createdAt"
         );
         setTips(response.data.data);
       } catch (error) {

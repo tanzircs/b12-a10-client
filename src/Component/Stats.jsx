@@ -14,7 +14,7 @@ const Stats = () => {
     const fetchStats = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/stats/community"
+          "https://b12-a10-server.vercel.app/api/stats/community"
         );
         setStats(response.data);
       } catch (error) {

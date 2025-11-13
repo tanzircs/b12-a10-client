@@ -10,7 +10,7 @@ const UpcomingEvents = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/events?limit=4&sort=date"
+          "https://b12-a10-server.vercel.app/api/events?limit=4&sort=date"
         );
         setEvents(response.data.data);
       } catch (error) {
@@ -50,7 +50,7 @@ const UpcomingEvents = () => {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 mt-20">
+    <div className="max-w-[1440px] mx-auto px-4 lg:px-0 mt-20">
       <h2 className="text-3xl font-semibold text-center mb-10">
         Upcoming Events
       </h2>
