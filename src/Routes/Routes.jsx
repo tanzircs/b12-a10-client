@@ -11,6 +11,8 @@ import AllChallenges from "./../Pages/AllChallenges";
 import ChallengeDetail from "../Pages/ChallengeDetail";
 import AddChallenge from "../Pages/AddChallenge";
 import JoinChallenge from "../Pages/JoinChallenge";
+import MyActivities from "../Pages/MyActivities";
+import MyActivityDetail from "../Pages/MyActivityDetail";
 
 
 const router = createBrowserRouter([
@@ -62,6 +64,24 @@ const router = createBrowserRouter([
       },
 
       {
+        path: "/my-activities",
+        element: (
+          <PrivateRoute>
+            <MyActivities />
+          </PrivateRoute>
+        ),
+        },
+      
+        {
+            path: "/my-activities/:id",
+            element: (
+                <PrivateRoute>
+                    <MyActivityDetail />
+                </PrivateRoute>
+            ),
+        },
+
+      {
         path: "/my-profile",
         element: (
           <PrivateRoute>
@@ -70,10 +90,10 @@ const router = createBrowserRouter([
         ),
       },
 
-    //   {
-    //     path: "*",
-    //     element: <ErrorPage />,
-    //   },
+      //   {
+      //     path: "*",
+      //     element: <ErrorPage />,
+      //   },
     ],
   },
 ]);
