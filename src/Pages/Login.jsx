@@ -60,7 +60,8 @@ const Login = () => {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
-                </label>
+                              </label>
+                              <br />
                 <input
                   type="email"
                   name="email"
@@ -82,14 +83,14 @@ const Login = () => {
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-14 cursor-pointer"
+                  className="absolute right-15 top-9 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
                 <label className="label">
                   <Link
                     to="/forgot-password"
-                    className="label-text-alt link link-hover"
+                    className="label-text-alt link link-hover mt-2 text-green-600"
                   >
                     Forgot password?
                   </Link>

@@ -91,7 +91,8 @@ const Register = () => {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Name</span>
-                </label>
+                              </label>
+                              <br />
                 <input
                   type="text"
                   name="name"
@@ -103,7 +104,8 @@ const Register = () => {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
-                </label>
+                              </label>
+                              <br />
                 <input
                   type="email"
                   name="email"
@@ -137,7 +139,7 @@ const Register = () => {
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-14 cursor-pointer"
+                  className="absolute right-14 top-9 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
