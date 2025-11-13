@@ -8,6 +8,9 @@ import Forget from "../Pages/Forget";
 import PrivateRoute from "./PrivateRoute";
 import MyProfile from "../Pages/MyProfile";
 import AllChallenges from "./../Pages/AllChallenges";
+import ChallengeDetail from "../Pages/ChallengeDetail";
+import AddChallenge from "../Pages/AddChallenge";
+import JoinChallenge from "../Pages/JoinChallenge";
 
 
 const router = createBrowserRouter([
@@ -37,7 +40,26 @@ const router = createBrowserRouter([
         element: <AllChallenges />,
       },
 
-
+      {
+        path: "/challenges/:id",
+        element: <ChallengeDetail />,
+      },
+      {
+        path: "/challenges/add",
+        element: (
+          <PrivateRoute>
+            <AddChallenge />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/challenges/join/:id",
+        element: (
+          <PrivateRoute>
+            <JoinChallenge />
+          </PrivateRoute>
+        ),
+      },
 
       {
         path: "/my-profile",
@@ -48,10 +70,10 @@ const router = createBrowserRouter([
         ),
       },
 
-      {
-        path: "*",
-        element: <ErrorPage />,
-      },
+    //   {
+    //     path: "*",
+    //     element: <ErrorPage />,
+    //   },
     ],
   },
 ]);
