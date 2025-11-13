@@ -81,7 +81,7 @@ const AllChallenges = () => {
       </Helmet>
 
       <div className="bg-base-200 p-8">
-        <div className="max-w-7xl mx-auto items-center text-center md:flex md:justify-between md:text-left mb-8">
+        <div className="max-w-[1440px] mx-auto items-center text-center md:flex md:justify-between md:text-left mb-8">
           <h1 className="text-3xl font-bold">Browse All Challenges</h1>
           {user && (
             <Link
@@ -95,7 +95,7 @@ const AllChallenges = () => {
 
         <form
           onSubmit={handleFilterSubmit}
-          className="max-w-7xl mx-auto bg-base-100 p-6 rounded-lg shadow-md mb-8"
+          className="max-w-[1440px] mx-auto bg-base-100 p-6 rounded-lg shadow-md mb-8 "
         >
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
             <div className="form-control col-span-1 md:col-span-3 lg:col-span-2">
@@ -191,7 +191,7 @@ const AllChallenges = () => {
         </form>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-0 py-12">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 9 }).map((_, index) => (
