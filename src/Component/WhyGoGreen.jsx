@@ -22,7 +22,7 @@ const WhyGoGreen = () => {
   ];
 
     return (
-      <div className="max-w-[1440px] mx-auto px-4 mt-20">
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-0 mt-20">
         <h2 className="text-3xl font-semibold text-center mb-10">
           Why Go Green?
         </h2>

@@ -39,7 +39,7 @@ const ImageSlider = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   return (
-    <div className="relative max-w-[1440px] mx-auto h-[500px]">
+    <div className="relative max-w-[1440px] mx-auto h-[300px] lg:h-[500px]">
       <button
         ref={prevRef}
         className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/60 text-white p-3 rounded-full hover:bg-black transition"
